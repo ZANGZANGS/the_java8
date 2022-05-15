@@ -1,21 +1,40 @@
 package the.java8;
 
-import java.util.function.Function;
+import java.util.function.*;
 
 public class Foo {
 
     public static void main(String[] args) {
-        int baseNumber = 10;
 
-        Function<Integer, Integer> plus10 = number -> number + 10;
-        Function<Integer, Integer> multiply2 = number -> number * 2;
+        Foo foo = new Foo();
+        foo.run();
+    }
 
-        //compose: 함수 적용 전 처리
-        System.out.println(plus10.compose(multiply2).apply(20));
-        //andThen: 함수 적용 후 처리
-        System.out.println(plus10.andThen(multiply2).apply(20));
+    private void run(){
+        final int baseNumber = 10;
 
+        //로컬클래스
+        class LocalClass {
+            void printBaseNumber(){
+                System.out.println(baseNumber);
+            }
+        }
 
+        //익명 클래스
+        Consumer<Integer> integerConsumer = new Consumer<Integer>() {
+            int baseNumber = 11;
+            @Override
+            public void accept(Integer integer) {
+                System.out.println(baseNumber);
+            }
+        };
+
+        //람다
+        IntConsumer print = (i) -> {
+            //int baseNumber = 12;
+            //람다는 스코프가 run 함수와 같다. 내부에 int baseNumber 재선언이 불가함
+            System.out.println(i + baseNumber);
+        };
     }
 
 }
