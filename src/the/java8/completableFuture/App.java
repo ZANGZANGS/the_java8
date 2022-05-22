@@ -1,40 +1,19 @@
 package the.java8.completableFuture;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class App {
     public static void main(String[] args) {
-        Thread thread = new Thread(() ->{
-            while (true) {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-                System.out.println("Thread: " + Thread.currentThread().getName());
-                try {
-                    Thread.sleep(3000L);
-                } catch (InterruptedException e) {
-                    System.out.println("exit");
-//                    e.printStackTrace();
-                    return;
-                }
-            }
+        executorService.scheduleAtFixedRate(getRunnable("Hello"), 3, 2, TimeUnit.SECONDS);
 
 
-        });
-        thread.start();
-
-        System.out.println("hello:" + Thread.currentThread().getName());
-
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println(thread + " is finished");
     }
 
-
-    //1. thread를 생성해서 사용하는 방법
-    /*static class MyThread extends Thread{
-        @Override
-        public void run(){
-            System.out.println("Thread: " + Thread.currentThread().getName());
-        }
-    }*/
+    private static Runnable getRunnable(String message) {
+        return () -> System.out.println(message +", "+ Thread.currentThread().getName());
+    }
 }
