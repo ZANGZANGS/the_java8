@@ -4,18 +4,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class App {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        CompletableFuture<String> future = CompletableFuture.supplyAsync(()-> {
+        CompletableFuture<String> hello = CompletableFuture.supplyAsync(() -> {
             System.out.println("Hello " + Thread.currentThread().getName());
-            return "hello";
-        }).thenApply((s) -> {
-            System.out.println(Thread.currentThread().getName());
-            return s.toUpperCase();
+            return "Hello";
         });
 
-        future.get();
+        CompletableFuture<String> world = CompletableFuture.supplyAsync(() -> {
+            System.out.println("World " + Thread.currentThread().getName());
+            return "World";
+        });
+
+        List<CompletableFuture> futures = Arrays.asList(hello, world);
+        CompletableFuture[] futuresArray = futures.toArray(new CompletableFuture[futures.size()]);
+
+        CompletableFuture<Void> future = CompletableFuture.allOf(futuresArray).thenAccept((s) -> System.out.println(s));
+
+        System.out.println(future.get());
 
 
     }
